@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2020-10-27">
+    <creator>NetworkX 2.5</creator>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static" name="">
+    <nodes>
+      <node id="rebel blockade" label="rebel blockade" />
+      <node id="runner" label="runner" />
+      <node id="r2-d2" label="r2-d2" />
+      <node id="c-3po" label="c-3po" />
+      <node id="imperial officer" label="imperial officer" />
+      <node id="vader" label="vader" />
+      <node id="officer" label="officer" />
+      <node id="trooper" label="trooper" />
+      <node id="leia" label="leia" />
+      <node id="commander" label="commander" />
+      <node id="luke" label="luke" />
+      <node id="beru" label="beru" />
+      <node id="kenobi" label="kenobi" />
+      <node id="ben" label="ben" />
+      <node id="aunt bery" label="aunt bery" />
+      <node id="human" label="human" />
+      <node id="han" label="han" />
+      <node id="first trooper" label="first trooper" />
+      <node id="camie" label="camie" />
+      <node id="owen" label="owen" />
+      <node id="aunt beru" label="aunt beru" />
+      <node id="mos eisley" label="mos eisley" />
+      <node id="xp-38" label="xp-38" />
+      <node id="gantry officer" label="gantry officer" />
+      <node id="leader" label="leader" />
+      <node id="fighter" label="fighter" />
+      <node id="tarkin" label="tarkin" />
+      <node id="wingman" label="wingman" />
+      <node id="tie fighter" label="tie fighter" />
+      <node id="command office" label="command office" />
+      <node id="lifepod" label="lifepod" />
+      <node id="biggs" label="biggs" />
+      <node id="deak" label="deak" />
+      <node id="chief" label="chief" />
+      <node id="seven" label="seven" />
+      <node id="gold leader" label="gold leader" />
+      <node id="lars homestead" label="lars homestead" />
+      <node id="motti" label="motti" />
+      <node id="deck" label="deck" />
+      <node id="willard" label="willard" />
+      <node id="officer cass" label="officer cass" />
+      <node id="bartender" label="bartender" />
+      <node id="greedo" label="greedo" />
+      <node id="jabba" label="jabba" />
+      <node id="docking bay" label="docking bay" />
+      <node id="read leader" label="read leader" />
+      <node id="dodonna" label="dodonna" />
+      <node id="wedge" label="wedge" />
+    </nodes>
+    <edges>
+      <edge source="rebel blockade" target="runner" id="0" />
+      <edge source="rebel blockade" target="r2-d2" id="1" />
+      <edge source="rebel blockade" target="c-3po" id="2" />
+      <edge source="rebel blockade" target="imperial officer" id="3" />
+      <edge source="rebel blockade" target="vader" id="4" />
+      <edge source="rebel blockade" target="officer" id="5" />
+      <edge source="rebel blockade" target="trooper" id="6" />
+      <edge source="rebel blockade" target="leia" id="7" />
+      <edge source="rebel blockade" target="commander" id="8" />
+      <edge source="runner" target="r2-d2" id="9" />
+      <edge source="runner" target="c-3po" id="10" />
+      <edge source="runner" target="imperial officer" id="11" />
+      <edge source="runner" target="vader" id="12" />
+      <edge source="runner" target="officer" id="13" />
+      <edge source="runner" target="trooper" id="14" />
+      <edge source="runner" target="leia" id="15" />
+      <edge source="runner" target="commander" id="16" />
+      <edge source="r2-d2" target="c-3po" id="17" />
+      <edge source="r2-d2" target="luke" id="18" />
+      <edge source="r2-d2" target="leia" id="19" />
+      <edge source="r2-d2" target="beru" id="20" />
+      <edge source="r2-d2" target="kenobi" id="21" />
+      <edge source="r2-d2" target="ben" id="22" />
+      <edge source="r2-d2" target="biggs" id="23" />
+      <edge source="r2-d2" target="owen" id="24" />
+      <edge source="r2-d2" target="aunt beru" id="25" />
+      <edge source="r2-d2" target="willard" id="26" />
+      <edge source="r2-d2" target="leader" id="27" />
+      <edge source="r2-d2" target="chief" id="28" />
+      <edge source="c-3po" target="leia" id="29" />
+      <edge source="c-3po" target="luke" id="30" />
+      <edge source="c-3po" target="aunt bery" id="31" />
+      <edge source="c-3po" target="kenobi" id="32" />
+      <edge source="c-3po" target="human" id="33" />
+      <edge source="c-3po" target="han" id="34" />
+      <edge source="c-3po" target="officer" id="35" />
+      <edge source="c-3po" target="first trooper" id="36" />
+      <edge source="c-3po" target="trooper" id="37" />
+      <edge source="c-3po" target="lifepod" id="38" />
+      <edge source="c-3po" target="biggs" id="39" />
+      <edge source="c-3po" target="beru" id="40" />
+      <edge source="c-3po" target="owen" id="41" />
+      <edge source="c-3po" target="aunt beru" id="42" />
+      <edge source="c-3po" target="ben" id="43" />
+      <edge source="c-3po" target="mos eisley" id="44" />
+      <edge source="c-3po" target="bartender" id="45" />
+      <edge source="c-3po" target="gantry officer" id="46" />
+      <edge source="c-3po" target="leader" id="47" />
+      <edge source="c-3po" target="chief" id="48" />
+      <edge source="imperial officer" target="vader" id="49" />
+      <edge source="imperial officer" target="officer" id="50" />
+      <edge source="imperial officer" target="trooper" id="51" />
+      <edge source="imperial officer" target="tarkin" id="52" />
+      <edge source="vader" target="officer" id="53" />
+      <edge source="vader" target="leia" id="54" />
+      <edge source="vader" target="commander" id="55" />
+      <edge source="vader" target="tarkin" id="56" />
+      <edge source="vader" target="ben" id="57" />
+      <edge source="vader" target="wingman" id="58" />
+      <edge source="vader" target="tie fighter" id="59" />
+      <edge source="vader" target="motti" id="60" />
+      <edge source="officer" target="luke" id="61" />
+      <edge source="officer" target="leia" id="62" />
+      <edge source="officer" target="commander" id="63" />
+      <edge source="officer" target="command office" id="64" />
+      <edge source="officer" target="gantry officer" id="65" />
+      <edge source="officer" target="han" id="66" />
+      <edge source="officer" target="ben" id="67" />
+      <edge source="officer" target="first trooper" id="68" />
+      <edge source="officer" target="trooper" id="69" />
+      <edge source="officer" target="tarkin" id="70" />
+      <edge source="trooper" target="luke" id="71" />
+      <edge source="trooper" target="first trooper" id="72" />
+      <edge source="trooper" target="mos eisley" id="73" />
+      <edge source="trooper" target="ben" id="74" />
+      <edge source="trooper" target="han" id="75" />
+      <edge source="trooper" target="tarkin" id="76" />
+      <edge source="leia" target="luke" id="77" />
+      <edge source="leia" target="biggs" id="78" />
+      <edge source="leia" target="commander" id="79" />
+      <edge source="leia" target="lars homestead" id="80" />
+      <edge source="leia" target="aunt beru" id="81" />
+      <edge source="leia" target="kenobi" id="82" />
+      <edge source="leia" target="ben" id="83" />
+      <edge source="leia" target="motti" id="84" />
+      <edge source="leia" target="tarkin" id="85" />
+      <edge source="leia" target="han" id="86" />
+      <edge source="leia" target="first trooper" id="87" />
+      <edge source="leia" target="deck" id="88" />
+      <edge source="leia" target="willard" id="89" />
+      <edge source="leia" target="leader" id="90" />
+      <edge source="leia" target="chief" id="91" />
+      <edge source="luke" target="camie" id="92" />
+      <edge source="luke" target="beru" id="93" />
+      <edge source="luke" target="owen" id="94" />
+      <edge source="luke" target="aunt beru" id="95" />
+      <edge source="luke" target="ben" id="96" />
+      <edge source="luke" target="kenobi" id="97" />
+      <edge source="luke" target="mos eisley" id="98" />
+      <edge source="luke" target="han" id="99" />
+      <edge source="luke" target="xp-38" id="100" />
+      <edge source="luke" target="gantry officer" id="101" />
+      <edge source="luke" target="first trooper" id="102" />
+      <edge source="luke" target="leader" id="103" />
+      <edge source="luke" target="fighter" id="104" />
+      <edge source="luke" target="biggs" id="105" />
+      <edge source="luke" target="deak" id="106" />
+      <edge source="luke" target="bartender" id="107" />
+      <edge source="luke" target="wedge" id="108" />
+      <edge source="luke" target="chief" id="109" />
+      <edge source="beru" target="owen" id="110" />
+      <edge source="kenobi" target="ben" id="111" />
+      <edge source="ben" target="biggs" id="112" />
+      <edge source="ben" target="ben" id="113" />
+      <edge source="ben" target="mos eisley" id="114" />
+      <edge source="ben" target="han" id="115" />
+      <edge source="ben" target="xp-38" id="116" />
+      <edge source="ben" target="command office" id="117" />
+      <edge source="ben" target="gantry officer" id="118" />
+      <edge source="ben" target="leader" id="119" />
+      <edge source="ben" target="chief" id="120" />
+      <edge source="ben" target="fighter" id="121" />
+      <edge source="ben" target="bartender" id="122" />
+      <edge source="han" target="first trooper" id="123" />
+      <edge source="han" target="mos eisley" id="124" />
+      <edge source="han" target="greedo" id="125" />
+      <edge source="han" target="jabba" id="126" />
+      <edge source="han" target="command office" id="127" />
+      <edge source="han" target="gantry officer" id="128" />
+      <edge source="han" target="deck" id="129" />
+      <edge source="first trooper" target="command office" id="130" />
+      <edge source="camie" target="biggs" id="131" />
+      <edge source="camie" target="deak" id="132" />
+      <edge source="owen" target="aunt beru" id="133" />
+      <edge source="mos eisley" target="bartender" id="134" />
+      <edge source="mos eisley" target="greedo" id="135" />
+      <edge source="mos eisley" target="xp-38" id="136" />
+      <edge source="leader" target="biggs" id="137" />
+      <edge source="leader" target="fighter" id="138" />
+      <edge source="leader" target="gold leader" id="139" />
+      <edge source="leader" target="wedge" id="140" />
+      <edge source="leader" target="chief" id="141" />
+      <edge source="leader" target="read leader" id="142" />
+      <edge source="fighter" target="biggs" id="143" />
+      <edge source="fighter" target="read leader" id="144" />
+      <edge source="fighter" target="wedge" id="145" />
+      <edge source="tarkin" target="motti" id="146" />
+      <edge source="tarkin" target="officer cass" id="147" />
+      <edge source="biggs" target="deak" id="148" />
+      <edge source="biggs" target="chief" id="149" />
+      <edge source="biggs" target="seven" id="150" />
+      <edge source="biggs" target="gold leader" id="151" />
+      <edge source="biggs" target="wedge" id="152" />
+      <edge source="gold leader" target="dodonna" id="153" />
+      <edge source="gold leader" target="wedge" id="154" />
+      <edge source="jabba" target="docking bay" id="155" />
+      <edge source="dodonna" target="wedge" id="156" />
+    </edges>
+  </graph>
+</gexf>
