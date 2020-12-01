@@ -3,14 +3,17 @@ import dash_cytoscape as cyto
 import dash_html_components as html
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
+import networkx as nx
 from dash.dependencies import Input, Output, State
 from file_uploader import file_uploader
+from network_updater import network_updater
 from nw_metrics import get_metrics
 
 
+cyto.load_extra_layouts()
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-# the style arguments for the sidebar. We use position:fixed and a fixed width
+# the style arguments for the sidebar. We use position:fixed and a fixed width.
 SIDEBAR_STYLE = {
     "position": "fixed",
     "top": 0,
@@ -21,8 +24,7 @@ SIDEBAR_STYLE = {
     "background-color": "#f8f9fa",
 }
 
-# the styles for the main content position it to the right of the sidebar and
-# add some padding.
+# the styles for the main content position it to the right of the sidebar and add some padding.
 CONTENT_STYLE = {
     "margin-left": "30rem",
     "margin-right": "2rem",
@@ -30,6 +32,32 @@ CONTENT_STYLE = {
     "padding": "2rem 1rem",
     "height": "95vh"
 }
+
+# the styles for the network.
+CYTO_SHEET = [
+    # Group Selectors
+    {
+        'selector': 'node',
+        'style': {
+            'content': 'data(label)'
+        }
+    },
+
+    # Class Selectors
+    {
+        'selector': '.edge_infected',
+        'style': {
+            'background-color': 'red',
+            'line-color': 'red'
+        }
+    },
+    {
+        'selector': '.node_infected',
+        'style': {
+            'background-color': 'red',
+        }
+    },
+]
 
 
 def get_algorithms():
@@ -64,19 +92,10 @@ sidebar = html.Div(
 content = html.Div(
     [
         cyto.Cytoscape(
-            id='cytoscape-elements-basic',
-            layout={'name': 'preset'},
+            id='cytoscape-network',
+            layout={'name': 'circle'},
             style={'width': '100%', 'height': '100%'},
-            elements=[
-                # The nodes elements
-                {'data': {'id': 'one', 'label': 'Node 1'},
-                 'position': {'x': 50, 'y': 50}},
-                {'data': {'id': 'two', 'label': 'Node 2'},
-                 'position': {'x': 200, 'y': 200}},
-
-                # The edge elements
-                {'data': {'source': 'one', 'target': 'two', 'label': 'Node 1 to 2'}}
-            ]
+            stylesheet=CYTO_SHEET
         )
         # dcc.Graph(id='graph', style={'width': '100%', 'height': '100%'})
     ],
@@ -95,18 +114,21 @@ def upload_file(file_content, filename):
 
 
 # Callback for network
-# @app.callback(Output('cytoscape-network', 'elements'),
-#               [Input('algoselector', 'value')])
-# def update_nw(value):
-#     # fig = update_network(value)
-#     # fig.layout.height = 850
-#     # return fig
-#     elements = [
-#         {'data': {'id': 'one', 'label': 'Node 1'}, 'position': {'x': 75, 'y': 75}},
-#         {'data': {'id': 'two', 'label': 'Node 2'}, 'position': {'x': 200, 'y': 200}},
-#         {'data': {'source': 'one', 'target': 'two'}}
-#     ]
-#     return elements
+@app.callback(Output('cytoscape-network', 'elements'),
+              [Input('algoselector', 'value')])
+def update_nw(value):
+    elements = network_updater()
+    return elements
+
+
+# Callback for Modularity
+@app.callback(
+    Output("modularity_placeholder", "placeholder"), [Input("modularity", "n_clicks")]
+)
+def on_modularity_click(click):
+    if click:
+        graph = nx.read_gexf('data/nx_user.gexf')
+        return nx.algorithms.community.modularity(graph, nx.algorithms.community.label_propagation_communities(graph))
 
 
 if __name__ == '__main__':
