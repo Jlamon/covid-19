@@ -1,10 +1,13 @@
+import os
 import pandas as pd
 import networkx as nx
 
 
 def network_updater(timestep, interaction, infected):
-    # Load data from Toy Dataset
-    data = pd.read_csv("data/toy_dataset.csv")
+    if os.path.getsize("data/user_input.csv") == 0:
+        return []
+
+    data = pd.read_csv("data/user_input.csv")
     data.columns = data.columns.str.replace(' ', '')
     data = data[(data['timestep'] >= timestep[0]) & (data['timestep'] <= timestep[1])]
 
@@ -54,7 +57,3 @@ def network_updater(timestep, interaction, infected):
 
     nx.write_gexf(graph, 'data/nx_user.gexf')
     return elements
-
-
-if __name__ == '__main__':
-    network_updater([0, 100], True, True)

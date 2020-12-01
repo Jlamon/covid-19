@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 import dash
 import dash_cytoscape as cyto
 import dash_html_components as html
@@ -91,7 +92,7 @@ sidebar = html.Div(
         dcc.Upload(
             id='upload-file',
             children=html.Div([
-                dbc.Button("Upload File", outline=True, color="secondary", className="mr-1"),
+                dbc.Button("Upload File", id='upload-btn', outline=True, color="secondary", className="mr-1"),
                 html.Div(id='error_message')
             ])
         ),
@@ -119,13 +120,13 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
               [Input('upload-file', 'contents')],
               [State('upload-file', 'filename')])
 def upload_file(file_content, filename):
-    ret = file_uploader(file_content, filename)
-    return ret
+    return file_uploader(file_content, filename)
 
 
 # Callback for network
 @app.callback(Output('cytoscape-network', 'elements'),
-              [Input('timestep-slider', 'value'), Input('interaction', 'value'), Input('infected', 'value')])
+              [Input('timestep-slider', 'value'), Input('interaction', 'value'), Input('infected', 'value')]
+)
 def update_nw(timestep, interaction, infected):
     return network_updater(timestep, interaction, infected)
 
@@ -133,8 +134,11 @@ def update_nw(timestep, interaction, infected):
 # Callback for timestep slider
 @app.callback(Output('timestep-slider', 'max'),
               [Input('algoselector', 'value')])
-def update_max(value):
-    data = pd.read_csv("data/toy_dataset.csv")
+def update_max(content):
+    if os.path.getsize("data/user_input.csv") == 0:
+        return 100
+
+    data = pd.read_csv("data/user_input.csv")
     data.columns = data.columns.str.replace(' ', '')
     return data['timestep'].max()
 
