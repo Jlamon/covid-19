@@ -69,7 +69,8 @@ sidebar = html.Div(
     [
         html.H2("COVID-19 Contact Tracing Dashboard", className="display-6"),
         html.Hr(),
-        html.P('Pick a layout algorithm of your choice below.'),
+        html.P('Pick a layout algorithm of your choice below. Beware that some layout algorithms will take time to '
+               'run considering your network size.'),
         dbc.Select(
             id='algoselector',
             options=get_algorithms(),
@@ -84,7 +85,7 @@ sidebar = html.Div(
                 html.Div(id='error_message')
             ])
         ),
-        html.P('By Julien Lamon (MOMA: 0806-20-00)')
+        html.P('By Julien Lamon (MOMA: 0806-20-00)', style={"margin-top": "10px"})
     ],
     style=SIDEBAR_STYLE,
 )
