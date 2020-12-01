@@ -1,12 +1,12 @@
 import dash
-# import dash_cytoscape as cyto
+import dash_cytoscape as cyto
 import dash_html_components as html
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from file_uploader import file_uploader
 from nw_metrics import get_metrics
-from update_network import update_network
+
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -26,7 +26,9 @@ SIDEBAR_STYLE = {
 CONTENT_STYLE = {
     "margin-left": "30rem",
     "margin-right": "2rem",
+    "margin-top": "2rem",
     "padding": "2rem 1rem",
+    "height": "95vh"
 }
 
 
@@ -61,17 +63,22 @@ sidebar = html.Div(
 
 content = html.Div(
     [
-        # cyto.Cytoscape(
-        #     id='cytoscape-two-nodes',
-        #     layout={'name': 'random'},
-        #     style={'width': '100%', 'height': '100%'},
-        #     elements=[
-        #         {'data': {'id': 'one', 'label': 'Node 1'}, 'position': {'x': 75, 'y': 75}},
-        #         {'data': {'id': 'two', 'label': 'Node 2'}, 'position': {'x': 200, 'y': 200}},
-        #         {'data': {'source': 'one', 'target': 'two'}}
-        #     ]
-        # )
-        dcc.Graph(id='graph', style={'width': '100%', 'height': '100%'})
+        cyto.Cytoscape(
+            id='cytoscape-elements-basic',
+            layout={'name': 'preset'},
+            style={'width': '100%', 'height': '100%'},
+            elements=[
+                # The nodes elements
+                {'data': {'id': 'one', 'label': 'Node 1'},
+                 'position': {'x': 50, 'y': 50}},
+                {'data': {'id': 'two', 'label': 'Node 2'},
+                 'position': {'x': 200, 'y': 200}},
+
+                # The edge elements
+                {'data': {'source': 'one', 'target': 'two', 'label': 'Node 1 to 2'}}
+            ]
+        )
+        # dcc.Graph(id='graph', style={'width': '100%', 'height': '100%'})
     ],
     style=CONTENT_STYLE)
 
@@ -88,12 +95,18 @@ def upload_file(file_content, filename):
 
 
 # Callback for network
-@app.callback(Output('graph', 'figure'),
-              [Input('algoselector', 'value')])
-def update_nw(value):
-    fig = update_network(value)
-    fig.layout.height = 850
-    return fig
+# @app.callback(Output('cytoscape-network', 'elements'),
+#               [Input('algoselector', 'value')])
+# def update_nw(value):
+#     # fig = update_network(value)
+#     # fig.layout.height = 850
+#     # return fig
+#     elements = [
+#         {'data': {'id': 'one', 'label': 'Node 1'}, 'position': {'x': 75, 'y': 75}},
+#         {'data': {'id': 'two', 'label': 'Node 2'}, 'position': {'x': 200, 'y': 200}},
+#         {'data': {'source': 'one', 'target': 'two'}}
+#     ]
+#     return elements
 
 
 if __name__ == '__main__':
