@@ -70,3 +70,13 @@ def assortativity_click(click):
     if click:
         graph = nx.read_gexf('data/nx_user.gexf')
         return nx.degree_assortativity_coefficient(graph)
+
+
+def tapNode(data):
+    if data:
+        graph = nx.read_gexf('data/nx_user.gexf')
+        clicked = "You recently clicked: " + data['label']
+        br = html.Br()
+        degree = "Node Degree: " + str(graph.degree[data['label'].split(' ')[1]])
+
+        return [clicked, br, degree]

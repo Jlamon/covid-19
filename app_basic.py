@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from file_uploader import file_uploader
 from network_updater import network_updater
-from nw_metrics import get_metrics, modularity_click, edge_click, node_click, assortativity_click
+from nw_metrics import get_metrics, modularity_click, edge_click, node_click, assortativity_click, tapNode
 
 cyto.load_extra_layouts()
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -61,7 +61,8 @@ CYTO_SHEET = [
 def get_algorithms():
     algos = [{'label': 'Circle', 'value': 'circle'}, {'label': 'Concentric', 'value': 'concentric'},
              {'label': 'Random', 'value': 'random'}, {'label': 'Spread', 'value': 'spread'},
-             {'label': 'Dagre', 'value': 'dagre'}, {'label': 'Klay', 'value': 'klay'}]
+             {'label': 'Dagre', 'value': 'dagre'}, {'label': 'Klay', 'value': 'klay'},
+             {'label': 'Cose', 'value': 'cose'}, {'label': 'Cola', 'value': 'cola'}]
     return algos
 
 
@@ -78,6 +79,7 @@ sidebar = html.Div(
             style={"margin-bottom": "10px"}
         ),
         get_metrics(),
+        html.P(id='tapNodeData', style={"margin-top": "10px", "margin-bottom": "10px"}),
         dcc.Upload(
             id='upload-file',
             children=html.Div([
@@ -124,7 +126,23 @@ def update_nw(value):
 @app.callback(Output('cytoscape-network', 'layout'),
               [Input('algoselector', 'value')])
 def update_nw_layout(layout):
-    return {'name': layout}
+    if layout == 'cose':
+        return {
+            'name': layout,
+            'componentSpacing': 100,
+            'nodeRepulsion': 40000000,
+            'edgeElasticity': 10000,
+            'numIter': 200
+        }
+    else:
+        return {'name': layout}
+
+
+# Callback for TapNode Data
+@app.callback(Output('tapNodeData', 'children'),
+              Input('cytoscape-network', 'tapNodeData'))
+def displayTapNodeData(data):
+    return tapNode(data)
 
 
 # Callback for Modularity
