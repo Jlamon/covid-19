@@ -38,7 +38,6 @@ def get_metrics():
 
     row1 = html.Tr([html.Td(node_metric), html.Td(edge_metric)])
     row2 = html.Tr([html.Td(modu_metric), html.Td(assortativity_metric)])
-    # row3 = html.Tr([html.Td(metric_input), html.Td(metric_input)])
 
     table_body = [html.Tbody([row1, row2])]
 

@@ -59,7 +59,9 @@ CYTO_SHEET = [
 
 
 def get_algorithms():
-    algos = [{'label': 'Regular', 'value': 'regular'}, {'label': 'Complex', 'value': 'complex'}]
+    algos = [{'label': 'Circle', 'value': 'circle'}, {'label': 'Concentric', 'value': 'concentric'},
+             {'label': 'Random', 'value': 'random'}, {'label': 'Spread', 'value': 'spread'},
+             {'label': 'Dagre', 'value': 'dagre'}, {'label': 'Klay', 'value': 'klay'}]
     return algos
 
 
@@ -71,7 +73,7 @@ sidebar = html.Div(
         dbc.Select(
             id='algoselector',
             options=get_algorithms(),
-            value='regular',
+            value='circle',
             style={"margin-bottom": "10px"}
         ),
         get_metrics(),
@@ -117,6 +119,13 @@ def update_nw(value):
     return network_updater()
 
 
+# Callback for network
+@app.callback(Output('cytoscape-network', 'layout'),
+              [Input('algoselector', 'value')])
+def update_nw_layout(layout):
+    return {'name': layout}
+
+
 # Callback for Modularity
 @app.callback(
     Output("modularity_placeholder", "placeholder"), [Input("modularity", "n_clicks")]
@@ -125,7 +134,7 @@ def on_modularity_click(click):
     return modularity_click(click)
 
 
-# Callback for Modularity
+# Callback for # Edges
 @app.callback(
     Output("edge_placeholder", "placeholder"), [Input("edge", "n_clicks")]
 )
@@ -133,7 +142,7 @@ def on_edge_click(click):
     return edge_click(click)
 
 
-# Callback for Modularity
+# Callback for # Nodes
 @app.callback(
     Output("node_placeholder", "placeholder"), [Input("node", "n_clicks")]
 )
@@ -141,7 +150,7 @@ def on_node_click(click):
     return node_click(click)
 
 
-# Callback for Modularity
+# Callback for Assortativity
 @app.callback(
     Output("assortativity_placeholder", "placeholder"), [Input("assortativity", "n_clicks")]
 )
