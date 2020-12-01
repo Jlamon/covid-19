@@ -4,7 +4,7 @@ import networkx as nx
 
 def network_updater():
     # Load data from Toy Dataset
-    data = pd.read_csv("data/scenario4.csv")
+    data = pd.read_csv("data/toy_dataset.csv")
     data.columns = data.columns.str.replace(' ', '')
 
     elements = []

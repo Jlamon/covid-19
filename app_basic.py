@@ -3,12 +3,10 @@ import dash_cytoscape as cyto
 import dash_html_components as html
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
-import networkx as nx
 from dash.dependencies import Input, Output, State
 from file_uploader import file_uploader
 from network_updater import network_updater
-from nw_metrics import get_metrics
-
+from nw_metrics import get_metrics, modularity_click, edge_click, node_click, assortativity_click
 
 cyto.load_extra_layouts()
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -109,16 +107,14 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
               [Input('upload-file', 'contents')],
               [State('upload-file', 'filename')])
 def upload_file(file_content, filename):
-    message = file_uploader(file_content, filename)
-    return message
+    return file_uploader(file_content, filename)
 
 
 # Callback for network
 @app.callback(Output('cytoscape-network', 'elements'),
               [Input('algoselector', 'value')])
 def update_nw(value):
-    elements = network_updater()
-    return elements
+    return network_updater()
 
 
 # Callback for Modularity
@@ -126,9 +122,31 @@ def update_nw(value):
     Output("modularity_placeholder", "placeholder"), [Input("modularity", "n_clicks")]
 )
 def on_modularity_click(click):
-    if click:
-        graph = nx.read_gexf('data/nx_user.gexf')
-        return nx.algorithms.community.modularity(graph, nx.algorithms.community.label_propagation_communities(graph))
+    return modularity_click(click)
+
+
+# Callback for Modularity
+@app.callback(
+    Output("edge_placeholder", "placeholder"), [Input("edge", "n_clicks")]
+)
+def on_edge_click(click):
+    return edge_click(click)
+
+
+# Callback for Modularity
+@app.callback(
+    Output("node_placeholder", "placeholder"), [Input("node", "n_clicks")]
+)
+def on_node_click(click):
+    return node_click(click)
+
+
+# Callback for Modularity
+@app.callback(
+    Output("assortativity_placeholder", "placeholder"), [Input("assortativity", "n_clicks")]
+)
+def on_assortativity_click(click):
+    return assortativity_click(click)
 
 
 if __name__ == '__main__':
