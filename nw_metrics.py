@@ -1,4 +1,5 @@
 import dash_bootstrap_components as dbc
+import dash_daq as daq
 import dash_html_components as html
 import networkx as nx
 
@@ -36,10 +37,23 @@ def get_metrics():
         dbc.Input(placeholder="", id="assortativity_placeholder", disabled=True),
     ])
 
+    interaction_edges = daq.ToggleSwitch(
+        id='interaction',
+        label='Interactions between people',
+        value=True
+    )
+
+    infected_edges = daq.ToggleSwitch(
+        id='infected',
+        label='Infected people',
+        value=False
+    )
+
     row1 = html.Tr([html.Td(node_metric), html.Td(edge_metric)])
     row2 = html.Tr([html.Td(modu_metric), html.Td(assortativity_metric)])
+    row3 = html.Tr([html.Td(interaction_edges), html.Td(infected_edges)])
 
-    table_body = [html.Tbody([row1, row2])]
+    table_body = [html.Tbody([row1, row2, row3])]
 
     table = dbc.Table(table_body, bordered=True)
 

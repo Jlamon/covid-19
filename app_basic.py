@@ -12,8 +12,6 @@ from nw_metrics import get_metrics, modularity_click, edge_click, node_click, as
 cyto.load_extra_layouts()
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-max = 100
-
 # the style arguments for the sidebar. We use position:fixed and a fixed width.
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -63,9 +61,8 @@ CYTO_SHEET = [
 
 def get_algorithms():
     algos = [{'label': 'Circle', 'value': 'circle'}, {'label': 'Concentric', 'value': 'concentric'},
-             {'label': 'Random', 'value': 'random'}, {'label': 'Spread', 'value': 'spread'},
-             {'label': 'Dagre', 'value': 'dagre'}, {'label': 'Klay', 'value': 'klay'},
-             {'label': 'Cose', 'value': 'cose'}, {'label': 'Cola', 'value': 'cola'}]
+             {'label': 'Random', 'value': 'random'}, {'label': 'Dagre', 'value': 'dagre'},
+             {'label': 'Klay', 'value': 'klay'}, {'label': 'Cose', 'value': 'cose'}, {'label': 'Cola', 'value': 'cola'}]
     return algos
 
 
@@ -84,9 +81,9 @@ sidebar = html.Div(
         dcc.RangeSlider(
             id="timestep-slider",
             min=0,
-            max=max,
+            max=100,
             step=1,
-            value=[0, max]
+            value=[0, 100]
         ),
         html.P(id="timestep-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
         get_metrics(),
@@ -128,16 +125,16 @@ def upload_file(file_content, filename):
 
 # Callback for network
 @app.callback(Output('cytoscape-network', 'elements'),
-              [Input('timestep-slider', 'value')])
-def update_nw(timestep):
-    return network_updater(timestep)
+              [Input('timestep-slider', 'value'), Input('interaction', 'value'), Input('infected', 'value')])
+def update_nw(timestep, interaction, infected):
+    return network_updater(timestep, interaction, infected)
 
 
 # Callback for timestep slider
 @app.callback(Output('timestep-slider', 'max'),
               [Input('algoselector', 'value')])
 def update_max(value):
-    data = pd.read_csv("data/scenario4.csv")
+    data = pd.read_csv("data/toy_dataset.csv")
     data.columns = data.columns.str.replace(' ', '')
     return data['timestep'].max()
 
@@ -146,7 +143,7 @@ def update_max(value):
 @app.callback(Output('timestep-value', 'children'),
               [Input('timestep-slider', 'value')])
 def update_value_slider(value):
-    return 'You have selected this range: {}'.format(value)
+    return 'You have selected this timestep range: {}'.format(value)
 
 
 # Callback for network
