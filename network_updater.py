@@ -2,10 +2,11 @@ import pandas as pd
 import networkx as nx
 
 
-def network_updater():
+def network_updater(timestep):
     # Load data from Toy Dataset
-    data = pd.read_csv("data/toy_dataset.csv")
+    data = pd.read_csv("data/scenario4.csv")
     data.columns = data.columns.str.replace(' ', '')
+    data = data[(data['timestep'] >= timestep[0]) & (data['timestep'] <= timestep[1])]
 
     elements = []
     graph = nx.Graph()
@@ -31,7 +32,7 @@ def network_updater():
         graph.add_edge(edge[0], edge[1])
         elements.append({'data': {'source': 'node' + str(edge[0]), 'target': 'node' + str(edge[1]),
                                   'label': 'Person ' + str(edge[0]) + ' to ' + str(edge[1])}})
-
+    
     nx.write_gexf(graph, 'data/nx_user.gexf')
     return elements
 

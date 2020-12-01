@@ -1,3 +1,4 @@
+import pandas as pd
 import dash
 import dash_cytoscape as cyto
 import dash_html_components as html
@@ -10,6 +11,8 @@ from nw_metrics import get_metrics, modularity_click, edge_click, node_click, as
 
 cyto.load_extra_layouts()
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+max = 100
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width.
 SIDEBAR_STYLE = {
@@ -78,6 +81,14 @@ sidebar = html.Div(
             value='circle',
             style={"margin-bottom": "10px"}
         ),
+        dcc.RangeSlider(
+            id="timestep-slider",
+            min=0,
+            max=max,
+            step=1,
+            value=[0, max]
+        ),
+        html.P(id="timestep-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
         get_metrics(),
         html.P(id='tapNodeData', style={"margin-top": "10px", "margin-bottom": "10px"}),
         dcc.Upload(
@@ -100,7 +111,6 @@ content = html.Div(
             style={'width': '100%', 'height': '100%'},
             stylesheet=CYTO_SHEET
         )
-        # dcc.Graph(id='graph', style={'width': '100%', 'height': '100%'})
     ],
     style=CONTENT_STYLE)
 
@@ -112,14 +122,31 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
               [Input('upload-file', 'contents')],
               [State('upload-file', 'filename')])
 def upload_file(file_content, filename):
-    return file_uploader(file_content, filename)
+    ret = file_uploader(file_content, filename)
+    return ret
 
 
 # Callback for network
 @app.callback(Output('cytoscape-network', 'elements'),
+              [Input('timestep-slider', 'value')])
+def update_nw(timestep):
+    return network_updater(timestep)
+
+
+# Callback for timestep slider
+@app.callback(Output('timestep-slider', 'max'),
               [Input('algoselector', 'value')])
-def update_nw(value):
-    return network_updater()
+def update_max(value):
+    data = pd.read_csv("data/scenario4.csv")
+    data.columns = data.columns.str.replace(' ', '')
+    return data['timestep'].max()
+
+
+# Callback for timestep slider
+@app.callback(Output('timestep-value', 'children'),
+              [Input('timestep-slider', 'value')])
+def update_value_slider(value):
+    return 'You have selected this range: {}'.format(value)
 
 
 # Callback for network
