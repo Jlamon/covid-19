@@ -13,6 +13,13 @@ from nw_metrics import get_metrics, modularity_click, edge_click, node_click, as
 cyto.load_extra_layouts()
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+data = pd.read_csv("data/user_input.csv")
+lat_range = (round(data['loc_lat'].min(),3), round(data['loc_lat'].max(),3))
+long_range = (round(data['loc_long'].min(),3), round(data['loc_long'].max(),3))
+
+
+#to get the max
+
 # the style arguments for the sidebar. We use position:fixed and a fixed width.
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -21,7 +28,7 @@ SIDEBAR_STYLE = {
     "bottom": 0,
     "width": "30rem",
     "padding": "2rem 1rem",
-    "background-color": "#f8f9fa",
+    "background-color": "#f8f9fa"
 }
 
 # the styles for the main content position it to the right of the sidebar and add some padding.
@@ -87,6 +94,22 @@ sidebar = html.Div(
             value=[0, 100]
         ),
         html.P(id="timestep-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
+        dcc.RangeSlider(
+        	id="lat-slider",
+            min=lat_range[0],
+            max=lat_range[1],
+            step=0.001,
+            value=[lat_range[0], lat_range[1]]
+        ),
+        html.P(id="lat-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
+        dcc.RangeSlider(
+        	id="long-slider",
+            min=long_range[0],
+            max=long_range[1],
+            step=0.001,
+            value=[long_range[0], long_range[1]]
+        ),
+        html.P(id="long-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
         get_metrics(),
         html.P(id='tapNodeData', style={"margin-top": "10px", "margin-bottom": "10px"}),
         dcc.Upload(
@@ -125,10 +148,10 @@ def upload_file(file_content, filename):
 
 # Callback for network
 @app.callback(Output('cytoscape-network', 'elements'),
-              [Input('timestep-slider', 'value'), Input('interaction', 'value'), Input('infected', 'value')]
+              [Input('timestep-slider', 'value'), Input('interaction', 'value'), Input('infected', 'value'), Input('lat-slider', 'value'), Input('long-slider', 'value')]
 )
-def update_nw(timestep, interaction, infected):
-    return network_updater(timestep, interaction, infected)
+def update_nw(timestep, interaction, infected, lat, longg):
+    return network_updater(timestep, interaction, infected, lat, longg)
 
 
 # Callback for timestep slider
@@ -148,6 +171,47 @@ def update_max(content):
               [Input('timestep-slider', 'value')])
 def update_value_slider(value):
     return 'You have selected this timestep range: {}'.format(value)
+
+
+# Callback for latitude slider
+@app.callback(Output('lat-slider', 'max'),
+              [Input('algoselector', 'value')])
+def update_max(content):
+    if os.path.getsize("data/user_input.csv") == 0:
+        return lat_range[1]
+
+    data = pd.read_csv("data/user_input.csv")
+    data.columns = data.columns.str.replace(' ', '')
+    #return data['loc_lat'].max()
+    return lat_range[1]
+
+
+# Callback for latitude slider
+@app.callback(Output('lat-value', 'children'),
+              [Input('lat-slider', 'value')])
+def update_value_slider(value):
+    return 'You have selected this latitude range: {}'.format(value)
+
+
+# Callback for long slider
+@app.callback(Output('long-slider', 'max'),
+              [Input('algoselector', 'value')])
+def update_max(content):
+    if os.path.getsize("data/user_input.csv") == 0:
+        return long_range[1]
+
+    data = pd.read_csv("data/user_input.csv")
+    data.columns = data.columns.str.replace(' ', '')
+    #return data['loc_lat'].max()
+    return long_range[1]
+
+
+# Callback for long slider
+@app.callback(Output('long-value', 'children'),
+              [Input('long-slider', 'value')])
+def update_value_slider(value):
+    return 'You have selected this long range: {}'.format(value)
+
 
 
 # Callback for network

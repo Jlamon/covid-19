@@ -3,13 +3,16 @@ import pandas as pd
 import networkx as nx
 
 
-def network_updater(timestep, interaction, infected):
+def network_updater(timestep, interaction, infected, lat, longg):
     if os.path.getsize("data/user_input.csv") == 0:
         return []
 
     data = pd.read_csv("data/user_input.csv")
     data.columns = data.columns.str.replace(' ', '')
     data = data[(data['timestep'] >= timestep[0]) & (data['timestep'] <= timestep[1])]
+    #filter by latitude and longitude    
+    data = data[(data['loc_lat'] >= lat[0]) & (data['loc_lat'] <= lat[1])]
+    data = data[(data['loc_long'] >= longg[0]) & (data['loc_long'] <= longg[1])]
 
     elements = []
     graph = nx.Graph()
@@ -30,7 +33,7 @@ def network_updater(timestep, interaction, infected):
         unique_list = []
         for co in connections:
             if co not in unique_list:
-                unique_list.append(co)
+                unique_list.append(co) 
 
         # Add all edges
         for edge in unique_list:
