@@ -6,20 +6,18 @@ import dash_html_components as html
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
-from file_uploader import file_uploader
 from network_updater import network_updater
 from nw_metrics import get_metrics, modularity_click, edge_click, node_click, assortativity_click, tapNode
 import base64
 import io
 
-
 cyto.load_extra_layouts()
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-data = pd.read_csv("data/user_input.csv")
+lat_range = (0, 100)
+long_range = (0, 100)
+max_timestep = 100
 
-lat_range = (round(data['loc_lat'].min(),3), round(data['loc_lat'].max(),3))
-long_range = (round(data['loc_long'].min(),3), round(data['loc_long'].max(),3))
 
 def file_uploader(file_content, filename):
     if file_content is not None:
@@ -30,10 +28,16 @@ def file_uploader(file_content, filename):
                 df = pd.read_csv(io.StringIO(decoded.decode()))
                 df.columns = df.columns.str.replace(' ', '')
 
-                #update the ranges
-                lat_range = (round(df['loc_lat'].min(),3), round(df['loc_lat'].max(),3))
-                long_range = (round(df['loc_long'].min(),3), round(df['loc_long'].max(),3))
-                
+                # update the ranges
+                global lat_range
+                global long_range
+                lat_range = (round(df['loc_lat'].min(), 3), round(df['loc_lat'].max(), 3))
+                long_range = (round(df['loc_long'].min(), 3), round(df['loc_long'].max(), 3))
+
+                # Update timestep
+                global max_timestep
+                max_timestep = df['timestep'].max()
+
                 df.to_csv('data/user_input.csv', index=False)
 
         except Exception as e:
@@ -42,7 +46,6 @@ def file_uploader(file_content, filename):
 
         return html.Div(['The file has been uploaded'])
 
-#to get the max
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width.
 SIDEBAR_STYLE = {
@@ -110,28 +113,43 @@ sidebar = html.Div(
             value='circle',
             style={"margin-bottom": "10px"}
         ),
-        dcc.RangeSlider(
-            id="timestep-slider",
-            min=0,
-            max=100,
-            step=1,
-            value=[0, 100]
+        html.Div(
+            [
+                dcc.RangeSlider(
+                    id="timestep-slider",
+                    min=0,
+                    max=max_timestep,
+                    step=1,
+                    value=[0, 100]
+                )
+            ],
+            id="timestep-div"
         ),
         html.P(id="timestep-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
-        dcc.RangeSlider(
-            id="lat-slider",
-            min=lat_range[0],
-            max=lat_range[1],
-            step=0.001,
-            value=[lat_range[0], lat_range[1]]
+        html.Div(
+            [
+                dcc.RangeSlider(
+                    id="lat-slider",
+                    min=lat_range[0],
+                    max=lat_range[1],
+                    step=0.001,
+                    value=[lat_range[0], lat_range[1]]
+                )
+            ],
+            id="latitude-div"
         ),
         html.P(id="lat-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
-        dcc.RangeSlider(
-            id="long-slider",
-            min=long_range[0],
-            max=long_range[1],
-            step=0.001,
-            value=[long_range[0], long_range[1]]
+        html.Div(
+            [
+                dcc.RangeSlider(
+                    id="long-slider",
+                    min=long_range[0],
+                    max=long_range[1],
+                    step=0.001,
+                    value=[long_range[0], long_range[1]]
+                )
+            ],
+            id="longitude-div"
         ),
         html.P(id="long-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
         get_metrics(),
@@ -143,6 +161,7 @@ sidebar = html.Div(
                 html.Div(id='error_message')
             ])
         ),
+        dbc.Button("Refresh the network", id='change-btn', outline=True, color="secondary", className="mr-1"),
         html.P('By Julien Lamon (MOMA: 0806-20-00)', style={"margin-top": "10px"})
     ],
     style=SIDEBAR_STYLE,
@@ -172,22 +191,41 @@ def upload_file(file_content, filename):
 
 # Callback for network
 @app.callback(Output('cytoscape-network', 'elements'),
-              [Input('timestep-slider', 'value'), Input('interaction', 'value'), Input('infected', 'value'), Input('lat-slider', 'value'), Input('long-slider', 'value')]
-)
-def update_nw(timestep, interaction, infected, lat, longg):
+              [Input('timestep-slider', 'value'), Input('interaction', 'value'), Input('infected', 'value'),
+               Input('lat-slider', 'value'), Input('long-slider', 'value'), Input('change-btn', 'n_clicks')]
+              )
+def update_nw(timestep, interaction, infected, lat, longg, n_clicks):
     return network_updater(timestep, interaction, infected, lat, longg)
 
 
 # Callback for timestep slider
-@app.callback(Output('timestep-slider', 'max'),
-              [Input('algoselector', 'value')])
-def update_max(content):
+@app.callback([Output('timestep-div', 'children'), Output('latitude-div', 'children'),
+               Output('longitude-div', 'children')],
+              [Input('algoselector', 'value'), Input('change-btn', 'n_clicks')])
+def update_max(content, n_clicks):
+    global max_timestep
+    global lat_range
+    global long_range
+
     if os.path.getsize("data/user_input.csv") == 0:
-        return 100
+        timestep = dcc.RangeSlider(id="timestep-slider", min=0, max=max_timestep, step=1, value=[0, max_timestep])
+        latitude = dcc.RangeSlider(id="lat-slider", min=lat_range[0], max=lat_range[1], step=0.001, value=[lat_range[0], lat_range[1]])
+        longitude = dcc.RangeSlider(id="long-slider", min=long_range[0], max=long_range[1], step=0.001, value=[long_range[0], long_range[1]])
+
+        return timestep, latitude, longitude
 
     data = pd.read_csv("data/user_input.csv")
     data.columns = data.columns.str.replace(' ', '')
-    return data['timestep'].max()
+
+    max_timestep = data['timestep'].max()
+    lat_range = (round(data['loc_lat'].min(), 3), round(data['loc_lat'].max(), 3))
+    long_range = (round(data['loc_long'].min(), 3), round(data['loc_long'].max(), 3))
+
+    timestep = dcc.RangeSlider(id="timestep-slider", min=0, max=max_timestep, step=1, value=[0, max_timestep])
+    latitude = dcc.RangeSlider(id="lat-slider", min=lat_range[0], max=lat_range[1], step=0.001, value=[lat_range[0], lat_range[1]])
+    longitude = dcc.RangeSlider(id="long-slider", min=long_range[0], max=long_range[1], step=0.001, value=[long_range[0], long_range[1]])
+
+    return timestep, latitude, longitude
 
 
 # Callback for timestep slider
@@ -198,19 +236,6 @@ def update_value_slider(value):
 
 
 # Callback for latitude slider
-@app.callback(Output('lat-slider', 'max'),
-              [Input('algoselector', 'value')])
-def update_max(content):
-    if os.path.getsize("data/user_input.csv") == 0:
-        return lat_range[1]
-
-    data = pd.read_csv("data/user_input.csv")
-    data.columns = data.columns.str.replace(' ', '')
-    #return data['loc_lat'].max()
-    return lat_range[1]
-
-
-# Callback for latitude slider
 @app.callback(Output('lat-value', 'children'),
               [Input('lat-slider', 'value')])
 def update_value_slider(value):
@@ -218,24 +243,10 @@ def update_value_slider(value):
 
 
 # Callback for long slider
-@app.callback(Output('long-slider', 'max'),
-              [Input('algoselector', 'value')])
-def update_max(content):
-    if os.path.getsize("data/user_input.csv") == 0:
-        return long_range[1]
-
-    data = pd.read_csv("data/user_input.csv")
-    data.columns = data.columns.str.replace(' ', '')
-    #return data['loc_lat'].max()
-    return long_range[1]
-
-
-# Callback for long slider
 @app.callback(Output('long-value', 'children'),
               [Input('long-slider', 'value')])
 def update_value_slider(value):
     return 'You have selected this long range: {}'.format(value)
-
 
 
 # Callback for network
