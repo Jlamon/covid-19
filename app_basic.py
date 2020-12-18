@@ -55,7 +55,8 @@ SIDEBAR_STYLE = {
     "bottom": 0,
     "width": "30rem",
     "padding": "2rem 1rem",
-    "background-color": "#f8f9fa"
+    "background-color": "#f8f9fa",
+    "overflow-y": "auto"
 }
 
 # the styles for the main content position it to the right of the sidebar and add some padding.
