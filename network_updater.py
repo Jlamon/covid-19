@@ -10,6 +10,7 @@ def network_updater(timestep, interaction, infected, lat, longg):
     data = pd.read_csv("data/user_input.csv")
     data.columns = data.columns.str.replace(' ', '')
     data = data[(data['timestep'] >= timestep[0]) & (data['timestep'] <= timestep[1])]
+    
     #filter by latitude and longitude    
     data = data[(data['loc_lat'] >= lat[0]) & (data['loc_lat'] <= lat[1])]
     data = data[(data['loc_long'] >= longg[0]) & (data['loc_long'] <= longg[1])]

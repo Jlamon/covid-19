@@ -9,14 +9,38 @@ from dash.dependencies import Input, Output, State
 from file_uploader import file_uploader
 from network_updater import network_updater
 from nw_metrics import get_metrics, modularity_click, edge_click, node_click, assortativity_click, tapNode
+import base64
+import io
+
 
 cyto.load_extra_layouts()
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 data = pd.read_csv("data/user_input.csv")
+
 lat_range = (round(data['loc_lat'].min(),3), round(data['loc_lat'].max(),3))
 long_range = (round(data['loc_long'].min(),3), round(data['loc_long'].max(),3))
 
+def file_uploader(file_content, filename):
+    if file_content is not None:
+        content_type, content_string = file_content.split(',')
+        decoded = base64.b64decode(content_string)
+        try:
+            if 'csv' in filename:
+                df = pd.read_csv(io.StringIO(decoded.decode()))
+                df.columns = df.columns.str.replace(' ', '')
+
+                #update the ranges
+                lat_range = (round(df['loc_lat'].min(),3), round(df['loc_lat'].max(),3))
+                long_range = (round(df['loc_long'].min(),3), round(df['loc_long'].max(),3))
+                
+                df.to_csv('data/user_input.csv', index=False)
+
+        except Exception as e:
+            print(e)
+            return html.Div(['There was an Error.'])
+
+        return html.Div(['The file has been uploaded'])
 
 #to get the max
 
@@ -95,7 +119,7 @@ sidebar = html.Div(
         ),
         html.P(id="timestep-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
         dcc.RangeSlider(
-        	id="lat-slider",
+            id="lat-slider",
             min=lat_range[0],
             max=lat_range[1],
             step=0.001,
@@ -103,7 +127,7 @@ sidebar = html.Div(
         ),
         html.P(id="lat-value", style={"margin-left": "15px", "margin-top": "-1.5rem"}),
         dcc.RangeSlider(
-        	id="long-slider",
+            id="long-slider",
             min=long_range[0],
             max=long_range[1],
             step=0.001,
